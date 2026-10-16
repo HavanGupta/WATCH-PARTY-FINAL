@@ -9,9 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-globe.gl": "^2.38.0",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",

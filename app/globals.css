@@ -24,3 +24,429 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Watch Party scrolling footer */
+@keyframes watchPartyMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.watch-party-marquee {
+  animation: watchPartyMarquee 22s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watch-party-marquee {
+    animation: none;
+  }
+}
+
+
+/* Floating reactions: identical speed for every emoji */
+.wp-float-0, .wp-float-1, .wp-float-2 {
+  bottom: 6%;
+  will-change: transform, opacity;
+  animation-fill-mode: forwards;
+  animation-duration: 6s, 6s, 0.3s;
+  animation-name: wp-rise, wp-fade, wp-pop;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1), linear, ease-out;
+}
+@keyframes wp-rise {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(0, -22px, 0); }
+}
+@keyframes wp-fade {
+  0%   { opacity: 0; }
+  8%   { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+/* wp-reactions-6s: each emoji lasts 6 seconds (page.tsx removes it after 6200 ms) */
+@keyframes wp-pop {
+  from { scale: 0.4; }
+  to   { scale: 1; }
+}
+
+/* Scramble / glitch text */
+.wp-scramble {
+  display: inline-block;
+}
+.wp-scrambling {
+  text-shadow: 2px 0 rgba(239, 68, 68, 0.85), -2px 0 rgba(34, 211, 238, 0.7);
+  animation: wp-glitch 0.25s steps(2) infinite;
+}
+@keyframes wp-glitch {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-1px, 1px); }
+  50%  { transform: translate(1px, -1px); }
+  75%  { transform: translate(-1px, 0); }
+  100% { transform: translate(0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wp-scrambling { animation: none; }
+}
+
+/* Intro animation (Netflix-style) */
+.wp-intro-logo {
+  animation: wp-intro-pop 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s both,
+    wp-intro-pulse 2s ease-in-out 2.4s infinite;
+}
+@keyframes wp-intro-pop {
+  0%   { opacity: 0; transform: scale(0.2) rotate(-12deg); }
+  60%  { opacity: 1; transform: scale(1.12) rotate(2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@keyframes wp-intro-pulse {
+  0%, 100% { box-shadow: 0 0 40px rgba(220, 38, 38, 0.35); }
+  50%      { box-shadow: 0 0 100px rgba(220, 38, 38, 0.85); }
+}
+.wp-intro-glow {
+  animation: wp-intro-glow 11s ease-out both;
+}
+@keyframes wp-intro-glow {
+  0%   { opacity: 0; transform: scale(0.5); }
+  40%  { opacity: 1; }
+  100% { opacity: 0.5; transform: scale(1.4); }
+}
+/* wp-sweep-v2: wide light streak that sweeps across the screen */
+.wp-intro-sweep {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 70vw;
+  height: 3px;
+  margin-left: -35vw;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(to right, transparent, #ef4444, #ffffff, #ef4444, transparent);
+  box-shadow: 0 0 24px 6px rgba(239, 68, 68, 0.6);
+  animation: wp-intro-sweep 3.2s ease-in-out 2.6s infinite;
+}
+
+@keyframes wp-intro-sweep {
+  0%   { opacity: 0; transform: translateX(-150%); }
+  30%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(250%); }
+}
+.wp-intro-word {
+  animation: wp-intro-word 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) 3.2s both;
+}
+@keyframes wp-intro-word {
+  from { opacity: 0; letter-spacing: 0.6em; filter: blur(8px); }
+  to   { opacity: 1; letter-spacing: 0.04em; filter: blur(0); }
+}
+.wp-intro-tag {
+  animation: wp-intro-tag 1.5s ease 5.8s both;
+}
+@keyframes wp-intro-tag {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Community: 3D orbit carousel */
+.wp-orbit-scene {
+  perspective: 1100px;
+}
+.wp-orbit-scene article {
+  will-change: transform, opacity;
+}
+.wp-orbit-floor {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 70%;
+  height: 46px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: radial-gradient(ellipse at center, rgba(220, 38, 38, 0.35), transparent 70%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+/* wp-tab-glow: a soft red glow follows the cursor over a tab */
+.wp-tab {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.wp-tab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  background: radial-gradient(
+    150px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(239, 68, 68, 0.6),
+    rgba(239, 68, 68, 0.2) 45%,
+    transparent 72%
+  );
+}
+
+.wp-tab:hover::before {
+  opacity: 1;
+}
+
+.wp-tab:hover {
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 24px rgba(239, 68, 68, 0.18);
+}
+
+/* wp-btn-glow: futuristic hover on every button except the Chat / Playlist / Polls tabs */
+button:not(.wp-tab) {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    text-shadow 0.25s ease,
+    filter 0.25s ease,
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    text-decoration-color 0.25s ease;
+}
+
+button:not(.wp-tab):not(:disabled):hover,
+button:not(.wp-tab):not(:disabled):focus-visible {
+  filter: brightness(1.18);
+  text-decoration-color: rgba(239, 68, 68, 0.95);
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.55),
+    0 0 22px rgba(239, 68, 68, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(239, 68, 68, 0.45),
+    0 0 18px rgba(239, 68, 68, 0.35);
+}
+
+/* the text shifts to bright white (dark-text buttons keep their dark text) */
+button:not(.wp-tab):not(:disabled):not([class*="text-black"]):not([class*="hover:text-"]):hover {
+  color: #ffffff;
+}
+
+/* the top menu already has its own underline */
+nav button:not(.wp-tab):not(:disabled):hover {
+  text-decoration-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:not(.wp-tab) {
+    transition: none;
+  }
+}
+
+/* wp-gold-cards: lift + golden glowing border on the Community video cards */
+#community article {
+  transition:
+    translate 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+    scale 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+#community article img {
+  transition: transform 0.5s ease;
+}
+
+#community article:hover,
+#community article:focus-within {
+  translate: 0 -10px;
+  scale: 1.12;
+  border-color: rgba(255, 215, 0, 0.95);
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 0, 0.55),
+    0 0 26px rgba(255, 215, 0, 0.45),
+    0 18px 40px rgba(0, 0, 0, 0.6);
+  animation: wp-gold-pulse 1.8s ease-in-out infinite;
+}
+
+#community article:hover img,
+#community article:focus-within img {
+  transform: scale(1.06);
+}
+
+@keyframes wp-gold-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(255, 215, 0, 0.55),
+      0 0 18px rgba(255, 215, 0, 0.35),
+      0 18px 40px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(255, 215, 0, 0.9),
+      0 0 38px rgba(255, 215, 0, 0.65),
+      0 18px 40px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #community article:hover,
+  #community article:focus-within {
+    animation: none;
+    translate: none;
+    scale: none;
+  }
+}
+
+/* wp-gold-cards-v2: the hover look (forced so nothing can override it) */
+#community article:hover,
+#community article:focus-within,
+.wp-orbit-scene article:hover {
+  translate: 0 -10px !important;
+  scale: 1.12 !important;
+  border-color: rgba(255, 215, 0, 0.95) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 0, 0.55),
+    0 0 26px rgba(255, 215, 0, 0.45),
+    0 18px 40px rgba(0, 0, 0, 0.6) !important;
+  animation: wp-gold-pulse 1.8s ease-in-out infinite;
+}
+
+#community article:hover img,
+#community article:focus-within img {
+  transform: scale(1.06);
+}
+
+@keyframes wp-gold-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(255, 215, 0, 0.55),
+      0 0 18px rgba(255, 215, 0, 0.35),
+      0 18px 40px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(255, 215, 0, 0.9),
+      0 0 38px rgba(255, 215, 0, 0.65),
+      0 18px 40px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #community article:hover,
+  #community article:focus-within {
+    animation: none;
+    translate: none !important;
+    scale: none !important;
+  }
+}
+
+/* wp-discover-gold: highlight (gold border + lift) on Discover cards, then the card enlarges and plays */
+#discover article > button:first-child {
+  transition:
+    translate 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+#discover article .wp-poster-img {
+  transition: transform 0.5s ease;
+}
+
+#discover article:hover > button:first-child,
+#discover article:focus-within > button:first-child {
+  translate: 0 -12px !important;
+  border-color: rgba(255, 215, 0, 0.95) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 0, 0.55),
+    0 0 26px rgba(255, 215, 0, 0.45),
+    0 18px 40px rgba(0, 0, 0, 0.6) !important;
+  animation: wp-gold-pulse-d 1.8s ease-in-out infinite;
+}
+
+#discover article:hover .wp-poster-img,
+#discover article:focus-within .wp-poster-img {
+  transform: scale(1.06);
+}
+
+@keyframes wp-gold-pulse-d {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(255, 215, 0, 0.55),
+      0 0 18px rgba(255, 215, 0, 0.35),
+      0 18px 40px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(255, 215, 0, 0.9),
+      0 0 38px rgba(255, 215, 0, 0.65),
+      0 18px 40px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #discover article:hover > button:first-child,
+  #discover article:focus-within > button:first-child {
+    animation: none;
+  }
+}
+
+/* wp-delay5: Community cards enlarge at once; their preview starts after about 5 s */
+#community .grid > article:hover,
+#community .grid > article:focus-within {
+  position: relative;
+  z-index: 20;
+}
+
+/* wp-loop-c: Community cards enlarge more on hover */
+#community .grid > article:hover,
+#community .grid > article:focus-within {
+  scale: 1.2 !important;
+  z-index: 20;
+}
+
+#community .wp-orbit-scene article:hover {
+  scale: 1.07 !important;
+}
+
+/* Movie bot mascot */
+.wp-bot-float { animation: wp-bot-float 3.2s ease-in-out infinite; }
+@keyframes wp-bot-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.wp-bot-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wp-bot-blink 4.5s infinite;
+}
+@keyframes wp-bot-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%           { transform: scaleY(0.1); }
+}
+.wp-bot-glow { animation: wp-bot-glow 1.6s ease-in-out infinite; }
+@keyframes wp-bot-glow {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+.wp-bot-wave {
+  transform-origin: 71px 86px;
+  animation: wp-bot-wave 2.6s ease-in-out infinite;
+}
+@keyframes wp-bot-wave {
+  0%, 55%, 100% { transform: rotate(0deg); }
+  65%           { transform: rotate(-22deg); }
+  75%           { transform: rotate(8deg); }
+  85%           { transform: rotate(-22deg); }
+  92%           { transform: rotate(0deg); }
+}
+.wp-bubble-pop { animation: wp-bubble-pop 0.35s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+@keyframes wp-bubble-pop {
+  from { opacity: 0; transform: scale(0.6) translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wp-bot-float, .wp-bot-eye, .wp-bot-glow, .wp-bot-wave, .wp-bubble-pop { animation: none; }
+}
